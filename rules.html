@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌧️ CITY-GRAD | ПРАВИЛА</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI','Arial',sans-serif}
+        :root{--dark-red:#1A0505;--dark-bg:#0D0202;--fire-red:#FF2244;--gold:#FFD700;--text-light:#F0E6E6;--text-muted:#882222}
+        body{background:var(--dark-bg);color:var(--text-light);min-height:100vh;overflow:hidden;background-image:radial-gradient(ellipse at 20% 80%,rgba(255,34,68,0.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(255,34,68,0.05) 0%,transparent 50%),repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(74,18,18,0.08) 2px,rgba(74,18,18,0.08) 4px),repeating-linear-gradient(90deg,transparent,transparent 2px,rgba(74,18,18,0.08) 2px,rgba(74,18,18,0.08) 4px)}
+        body::before{content:'';position:fixed;top:50%;left:50%;width:600px;height:600px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,34,68,0.04) 0%,transparent 70%);border-radius:50%;pointer-events:none;z-index:0;animation:pulseGlow 4s ease-in-out infinite}
+        @keyframes pulseGlow{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.5}50%{transform:translate(-50%,-50%) scale(1.2);opacity:1}}
+        #rainCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.7}
+        .container{max-width:1100px;margin:0 auto;padding:20px 30px;position:relative;z-index:2;max-height:100vh;overflow-y:auto}
+        .container::-webkit-scrollbar{width:6px}
+        .container::-webkit-scrollbar-track{background:var(--dark-bg)}
+        .container::-webkit-scrollbar-thumb{background:var(--fire-red);border-radius:10px;box-shadow:0 0 20px var(--fire-red)}
+        nav{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:rgba(13,2,2,0.85);backdrop-filter:blur(20px);border:1px solid rgba(204,0,0,0.2);border-radius:20px;margin-bottom:30px;box-shadow:0 8px 40px rgba(0,0,0,0.6);position:sticky;top:10px;z-index:100}
+        .logo{display:flex;align-items:center;gap:15px;font-size:28px;font-weight:900;text-decoration:none;color:var(--text-light)}
+        .logo span{background:linear-gradient(135deg,#cc0000,#FF2244,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% 200%;animation:shimmer 3s ease-in-out infinite}
+        @keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+        .nav-links{display:flex;gap:10px;flex-wrap:wrap}
+        .nav-links a{color:var(--text-muted);text-decoration:none;padding:10px 18px;border-radius:12px;transition:all .3s;font-weight:500;font-size:14px;display:flex;align-items:center;gap:8px;border:1px solid transparent}
+        .nav-links a:hover{color:var(--text-light);background:rgba(204,0,0,0.15);border-color:rgba(204,0,0,0.3);box-shadow:0 0 30px rgba(204,0,0,0.1)}
+        .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:5px}
+        .burger span{width:30px;height:3px;background:var(--text-light);border-radius:3px;transition:all .3s}
+        .burger.active span:nth-child(1){transform:rotate(45deg) translate(5px,6px)}
+        .burger.active span:nth-child(2){opacity:0}
+        .burger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-6px)}
+        .page-title{text-align:center;font-size:48px;font-weight:900;color:var(--fire-red);text-shadow:0 0 40px var(--fire-red),0 0 80px rgba(255,34,68,0.2);margin:20px 0 10px;letter-spacing:3px}
+        .page-sub{text-align:center;font-size:18px;color:var(--text-muted);margin-bottom:30px;letter-spacing:3px;text-transform:uppercase}
+        .rules-box{background:rgba(26,5,5,0.85);backdrop-filter:blur(10px);border:1px solid rgba(204,0,0,0.15);border-radius:24px;padd
+
+
+ing:30px;margin-bottom:30px;animation:fadeUp 0.8s ease}
+        @keyframes fadeUp{0%{opacity:0;transform:translateY(30px)}100%{opacity:1;transform:translateY(0)}}
+        .rules-section{margin-bottom:15px;border:1px solid rgba(204,0,0,0.08);border-radius:16px;overflow:hidden;transition:all .3s}
+        .rules-section:hover{border-color:rgba(204,0,0,0.2)}
+        .rules-header{background:rgba(255,34,68,0.05);padding:18px 25px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .3s;user-select:none}
+        .rules-header:hover{background:rgba(255,34,68,0.08)}
+        .rules-header .title{font-size:18px;font-weight:700;color:var(--text-light);display:flex;align-items:center;gap:12px}
+        .rules-header .title i{color:var(--fire-red)}
+        .rules-header .arrow{color:var(--text-muted);transition:transform .3s;font-size:18px}
+        .rules-header .arrow.open{transform:rotate(180deg)}
+        .rules-body{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease;padding:0 25px;background:rgba(0,0,0,0.2)}
+        .rules-body.open{max-height:2000px;padding:20px 25px}
+        .rules-body .rule-item{padding:8px 0;border-bottom:1px solid rgba(255,34,68,0.05);display:flex;gap:15px;font-size:14px;line-height:1.6;color:var(--text-light)}
+        .rules-body .rule-item:last-child{border-bottom:none}
+        .rules-body .rule-item .num{color:var(--fire-red);font-weight:700;min-width:50px;flex-shrink:0}
+        .rules-body .rule-item .text{color:var(--text-muted);flex:1}
+        .rules-body .rule-item .badge{color:var(--fire-red);font-weight:700;flex-shrink:0;font-size:12px;background:rgba(255,34,68,0.1);padding:2px 12px;border-radius:20px;white-space:nowrap}
+        .music-btn{position:fixed;bottom:30px;right:30px;z-index:999;background:rgba(255,34,68,0.15);border:2px solid var(--fire-red);border-radius:50%;width:60px;height:60px;font-size:28px;color:var(--fire-red);cursor:pointer;backdrop-filter:blur(8px);transition:.3s;box-shadow:0 0 40px rgba(255,34,68,0.15);display:flex;align-items:center;justify-content:center}
+        .music-btn:hover{transform:scale(1.1);box-shadow:0 0 80px rgba(255,34,68,0.3)}
+        .footer{text-align:center;padding:20px;color:var(--text-muted);font-size:13px;border-top:1px solid rgba(204,0,0,0.05);margin-top:10px}
+        .footer .derek{color:var(--gold);font-weight:700;margin-top:5px;font-size:13px}
+        .footer .derek i{color:var(--fire-red);margin:0 5px}
+        max-width:768px{.burger{display:flex}.nav-links{display:none;flex-direction:column;width:100%;padding-top:15px;border-top:1px solid rgba(204,0,0,0.1)}.nav-links.open{display:flex}.nav-links a{width:100%;justify-content:center}nav{flex-wrap:wrap}.page-title{font-size:28px}.page-sub{font-size:14px}.rules-box{padding:15px}.rules-header{padding:14px 18px}.rules-header .title{font-size:15px}.rules-body.open{padding:15px 18px}.rules-body .rule-item{font-size:13px;flex-wrap:wrap}.rules-body .rule-item .badge{margin-left:0}.music-btn{width:50px;height:50px;font-size:22px;bottom:20px;right:20px}}
+        max-width:480px{.container{padding:10px 15px}.logo{font-size:20px}.page-title{font-size:22px}}
+    </style>
+</head>
+<body>
+
+    <canvas id="rainCanvas"></canvas>
+
+    <audio id="bgMusic" loop>
+        <source src="https://ia600401.us.archive.org/20/items/HotlineMiamiSoundtrack/M.O.O.N.%20-%20Hydrogen.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container">
+        <nav>
+            <a href="#" class="logo">🌧️ <span>CITY-GRAD</span></a>
+            <div class="burger" onclick="toggleBurger()">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#"><i class="fas fa-gavel"></i> Правила</a>
+                <a href="https://discord.gg/mUurUFXS" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+                <a href="#" onclick="alert('🚨 Заявки принимаются через форму н
+
+
+а сайте!')"><i class="fas fa-file-signature"></i> Заявка</a>
+            </div>
+        </nav>
+
+        <div class="page-title">📜 ПРАВИЛА СЕРВЕРА</div>
+        <div class="page-sub">Нарушишь — ответишь. По-честному, сука.</div>
+
+        <div class="rules-box">
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSection(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 1. ОСНОВНЫЕ ПРИНЦИПЫ</div>
+                    <div class="arrow">▼</div>
+                </div>
+                <div class="rules-body open">
+                    <div class="rule-item"><span class="num">1.1</span><span class="text">NonRP — Запрещено нарушать RP-процесс. Прыжки, стрейфы, хаотичные движения во время боя запрещены.</span><span class="badge">Бан 2ч</span></div>
+                    <div class="rule-item"><span class="num">1.2</span><span class="text">FearRP — При наведенном оружии подчиняться. Запрещено игнорировать угрозы.</span><span class="badge">Бан 2ч</span></div>
+                    <div class="rule-item"><span class="num">1.3</span><span class="text">LeaveRP — Запрещено покидать сервер и использовать kill для ухода от RP.</span><span class="badge">Бан 4ч</span></div>
+                    <div class="rule-item"><span class="num">1.4</span><span class="text">Metagaming — Запрещено использовать информацию из Discord, стримов, сторонних программ.</span><span class="badge">Бан 4ч</span></div>
+                    <div class="rule-item"><span class="num">1.5</span><span class="text">NLR — После смерти не возвращаться на место гибели 10 минут. Не мстить.</span><span class="badge">Бан 2ч</span></div>
+                    <div class="rule-item"><span class="num">1.6</span><span class="text">Provocation — Запрещено провоцировать игроков на нарушение правил.</span><span class="badge">Бан 12ч</span></div>
+                    <div class="rule-item"><span class="num">1.7</span><span class="text">Bug Abuse — Запрещено использовать баги, уязвимости, дюпы.</span><span class="badge">Бан 5д</span></div>
+                    <div class="rule-item"><span class="num">1.8</span><span class="text">Rule Abuse — Запрещено использовать лазейки в правилах.</span><span class="badge">Бан 48ч</span></div>
+                    <div class="rule-item"><span class="num">1.9</span><span class="text">Cheat — Использование читов.</span><span class="badge">Перманент</span></div>
+                    <div class="rule-item"><span class="num">1.10</span><span class="text">Multi Account — Обход блокировки через другие аккаунты.</span><span class="badge">Перманент</span></div>
+                    <div class="rule-item"><span class="num">1.11</span><span class="text">Реклама — Реклама сторонних проектов.</span><span class="badge">Перманент</span></div>
+                    <div class="rule-item"><span class="num">1.12</span><span class="text">Рецидив — Нарушение 5+ правил за один раз.</span><span class="badge">Бан 5д</span></div>
+                    <div class="rule-item"><span class="num">1.13</span><span class="text">Nickname Abuse — Запрещены ники с оскорблениями, политикой, копирующие администрацию.</span><span class="badge">Смена + Бан 4ч</span></div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSection(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 2. НАСИЛИЕ</div>
+                    <div class="arrow">▼</div>
+                </div>
+                <div class="rules-body">
+                    <div class="rule-item"><span class="num">2.1</span><span class="text">Free Damage — Урон без RP-причины.</span><span class="badge">Бан 2ч</span></div>
+                    <div class="rule-item"><span class="num">2.2</span><span class="text">FreeKill — Убийство одного человека без RP-причины.</span><span class="badge">Бан 4ч</span></div>
+                    <div class="rule-item"><span class="num">2.3</span
+
+
+><span class="text">RDM — Убийство двух+ человек без RP-причины.</span><span class="badge">Бан 16ч</span></div>
+                    <div class="rule-item"><span class="num">2.4</span><span class="text">Mass RDM — Убийство трёх+ человек без RP-причины.</span><span class="badge">Бан 72ч</span></div>
+                    <div class="rule-item"><span class="num">2.5</span><span class="text">VDM — Сбитие игрока машиной без RP-причины.</span><span class="badge">Бан 6ч</span></div>
+                    <div class="rule-item"><span class="num">2.6</span><span class="text">SpawnKill — Убийство на спавне.</span><span class="badge">Бан 6ч</span></div>
+                    <div class="rule-item"><span class="num">2.7</span><span class="text">RDA — Арест без RP-причины.</span><span class="badge">Бан 4ч</span></div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSection(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 3. КРИМИНАЛ</div>
+                    <div class="arrow">▼</div>
+                </div>
+                <div class="rules-body">
+                    <div class="rule-item"><span class="num">3.1</span><span class="text">Ограбления — Максимум 1 000 евро. Запрещено в общественных местах (2+ игрока). Раз в 30 минут.</span><span class="badge">Бан 4ч</span></div>
+                    <div class="rule-item"><span class="num">3.2</span><span class="text">Рейды — Только от двух человек. Раз в 2 часа.</span><span class="badge">Бан 4ч</span></div>
+                    <div class="rule-item"><span class="num">3.3</span><span class="text">Free Taser — Тазер без RP-причины.</span><span class="badge">Бан 2ч</span></div>
+                    <div class="rule-item"><span class="num">3.4</span><span class="text">Door Abuse — Циклическое открытие/закрытие дверей для блокировки.</span><span class="badge">Бан 4ч</span></div>
+                    <div class="rule-item"><span class="num">3.5</span><span class="text">NonRP Kidnapping — Похищение без RP-причины.</span><span class="badge">Бан 4ч</span></div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSection(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 4. КОММУНИКАЦИЯ</div>
+                    <div class="arrow">▼</div>
+                </div>
+                <div class="rules-body">
+                    <div class="rule-item"><span class="num">4.1</span><span class="text">Мат и оскорбления — Вне RP мат запрещен. Родственников не упоминать.</span><span class="badge">Бан 8ч</span></div>
+                    <div class="rule-item"><span class="num">4.2</span><span class="text">Voice RP — Действия голосом не отыгрывать. Музыка только в барах.</span><span class="badge">Бан 2ч</span></div>
+                    <div class="rule-item"><span class="num">4.3</span><span class="text">Дискриминация — Оскорбления по национальности, религии, расе.</span><span class="badge">Бан 48ч</span></div>
+                    <div class="rule-item"><span class="num">4.4</span><span class="text">Насмешки над реальными личностями.</span><span class="badge">Бан 48ч</span></div>
+                    <div class="rule-item"><span class="num">4.5</span><span class="text">Политика — Обсуждение политики реального мира запрещено.</span><span class="badge">Бан 48ч</span></div>
+                    <div class="rule-item"><span class="num">4.6</span><span class="text">Запрещенный контент — Нацистская символика, NSFW запрещены.</span><span class="badge">Бан 48ч</span></div>
+                    <div class="rule-item"><span class="num">4.7</span><span class="text">Оскорбление проекта — Критика и оскорбления администрации.</span><span class="badge">Перманент</span></div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSecti
+
+
+on(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 5. СТРОИТЕЛЬСТВО</div>
+                    <div class="arrow">▼</div>
+                </div>
+                <div class="rules-body">
+                    <div class="rule-item"><span class="num">5.1</span><span class="text">Prop Abuse — Застраивать спавны запрещено. Убивать пропами запрещено.</span><span class="badge">Бан 6ч</span></div>
+                    <div class="rule-item"><span class="num">5.2</span><span class="text">Постройки — Только реалистичные. Лабиринты и преграды запрещены.</span><span class="badge">Бан 6ч</span></div>
+                    <div class="rule-item"><span class="num">5.3</span><span class="text">Стройка во время рейда — Достраивать оборону во время рейда запрещено.</span><span class="badge">Бан 12ч</span></div>
+                    <div class="rule-item"><span class="num">5.4</span><span class="text">Physics Gun — Использование физгана разрешено только для строительства.</span><span class="badge">Бан 6ч</span></div>
+                    <div class="rule-item"><span class="num">5.5</span><span class="text">Tool Gun — Только для изменения материала, включения/выключения коллизии и удаления пропов.</span><span class="badge">Бан 6ч</span></div>
+                    <div class="rule-item"><span class="num">5.6</span><span class="text">Bad Art — Нацистская символика, NSFW контент запрещены.</span><span class="badge">Бан 48ч</span></div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSection(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 6. ПОВЕДЕНИЕ С АДМИНИСТРАЦИЕЙ</div>
+                    <div class="arrow">▼</div>
+                </div>
+                <div class="rules-body">
+                    <div class="rule-item"><span class="num">6.1</span><span class="text">LTAP — Выход во время разбора.</span><span class="badge">Бан 48ч</span></div>
+                    <div class="rule-item"><span class="num">6.2</span><span class="text">Обман администрации — Затягивание разборок, угрозы, ложь.</span><span class="badge">Бан 12ч</span></div>
+                    <div class="rule-item"><span class="num">6.3</span><span class="text">Выдача себя за админа.</span><span class="badge">Бан 16ч</span></div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSection(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 7. АДМИНИСТРИРОВАНИЕ</div>
+                    <div class="arrow">▼</div>
+                </div>
+                <div class="rules-body">
+                    <div class="rule-item"><span class="num">7.1</span><span class="text">Дисциплина — 3 выговора = снятие.</span><span class="badge">Важно</span></div>
+                    <div class="rule-item"><span class="num">7.2</span><span class="text">Admin Abuse — Использование админских возможностей для себя.</span><span class="badge">Снятие</span></div>
+                    <div class="rule-item"><span class="num">7.3</span><span class="text">Спавн из F1 — Запрещено выдавать себе или другим игрокам предметы из F1.</span><span class="badge">Выговор</span></div>
+                    <div class="rule-item"><span class="num">7.4</span><span class="text">Спавн во время боя — Запрещено спавнить предметы во время перестрелки.</span><span class="badge">Выговор</span></div>
+                    <div class="rule-item"><span class="num">7.5</span><span class="text">Иерархия: Модератор → Администратор → Старший → Зам. Гл. → Гл. Админ → Куратор → Владелец</span><span class="badge">Структура</span></div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSection(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 8. АПЕЛЛЯЦИИ</div>
+                    <div class=
+
+
+"arrow">▼</div>
+                </div>
+                <div class="rules-body">
+                    <div class="rule-item"><span class="num">8.1</span><span class="text">Обжалование через Discord. Срок: 24 часа.</span><span class="badge">Правило</span></div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSection(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 9. ФРАКЦИИ</div>
+                    <div class="arrow">▼</div>
+                </div>
+                <div class="rules-body">
+                    <div class="rule-item"><span class="num">9.1</span><span class="text">Общее — Фракция создается по одобрению высшей администрации. От 5 игроков.</span><span class="badge">Важно</span></div>
+                    <div class="rule-item"><span class="num">9.2</span><span class="text">Требования: Уникальное название, RP-легенда, сфера влияния, иерархия, зона активности.</span><span class="badge">Правило</span></div>
+                    <div class="rule-item"><span class="num">9.3</span><span class="text">Создание — Создать Discord сервер, открыть тикет, предоставить описание.</span><span class="badge">Правило</span></div>
+                    <div class="rule-item"><span class="num">9.4</span><span class="text">Обязанности — Соблюдать правила, лидер отвечает за всех, отчеты по запросу.</span><span class="badge">Правило</span></div>
+                    <div class="rule-item"><span class="num">9.5</span><span class="text">Ограничения — Войны только по RP-причине. 3 недели без активности = расформирование.</span><span class="badge">Важно</span></div>
+                </div>
+            </div>
+
+            <div class="rules-section">
+                <div class="rules-header" onclick="toggleSection(this)">
+                    <div class="title"><i class="fas fa-skull"></i> 10. ДОПОЛНИТЕЛЬНО</div>
+                    <div class="arrow">▼</div>
+                </div>
+                <div class="rules-body">
+                    <div class="rule-item"><span class="num">10.1</span><span class="text">Medium RP. Уважение к процессу обязательно.</span><span class="badge">Важно</span></div>
+                    <div class="rule-item"><span class="num">10.2</span><span class="text">Non-RP Time: при <6 игроков расслабиться можно, но RDM, VDM и неадекватность запрещены.</span><span class="badge">Важно</span></div>
+                    <div class="rule-item"><span class="num">10.3</span><span class="text">В исключительных случаях администратор принимает решение по ситуации. Злоупотребление запрещено.</span><span class="badge">Важно</span></div>
+                    <div class="rule-item"><span class="num">10.4</span><span class="text">Незнание правил не освобождает от ответственности.</span><span class="badge">Важно</span></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <div style="font-size:12px;color:var(--text-muted);">© 2026 CITY-GRAD RP. Все права защищены.</div>
+            <div class="derek"><i class="fas fa-heart"></i> сделано Derek(ом) с любовью <i class="fas fa-heart"></i></div>
+        </div>
+    </div>
+
+    <button class="music-btn" id="musicToggle">🔊</button>
+
+    <script>
+        const canvas = document.getElementById('rainCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const drops = [];
+        for (let i = 0; i < 350; i++) {
+            drops.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                length: 8 + Math.random() * 25,
+                speed: 4 + Math.random() * 12,
+                opacity: 0.15 + Math.random() * 0.4,
+                width: 0.5 + Math.random() * 1.5,
+                offset: Math.random() * 10
+            });
+        }
+
+        function drawRain() {
+            ctx.clearRec
+
+
+t(0, 0, canvas.width, canvas.height);
+            drops.forEach(drop => {
+                ctx.beginPath();
+                ctx.moveTo(drop.x, drop.y);
+                ctx.lineTo(drop.x - 2 + Math.sin(drop.offset + drop.y * 0.01) * 0.5, drop.y + drop.length);
+                ctx.strokeStyle = `rgba(255, 34, 68, ${drop.opacity})`;
+                ctx.lineWidth = drop.width;
+                ctx.stroke();
+                drop.y += drop.speed;
+                drop.x -= 1.5 + Math.sin(drop.y * 0.01) * 0.3;
+                if (drop.y > canvas.height) {
+                    drop.y = -20;
+                    drop.x = Math.random() * canvas.width;
+                }
+                if (drop.x < -20) {
+                    drop.x = canvas.width + 20;
+                }
+            });
+            requestAnimationFrame(drawRain);
+        }
+        drawRain();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        function toggleBurger() {
+            document.querySelector('.burger').classList.toggle('active');
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
+        function toggleSection(header) {
+            const body = header.nextElementSibling;
+            const arrow = header.querySelector('.arrow');
+            body.classList.toggle('open');
+            arrow.classList.toggle('open');
+        }
+
+        const audio = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicToggle');
+
+        audio.volume = 0.3;
+
+        let musicOn = true;
+
+        musicBtn.addEventListener('click', function() {
+            if (musicOn) {
+                audio.pause();
+                musicBtn.textContent = '🔇';
+                musicOn = false;
+            } else {
+                audio.play().catch(function(e) {
+                    console.log('Ошибка воспроизведения:', e);
+                });
+                musicBtn.textContent = '🔊';
+                musicOn = true;
+            }
+        });
+
+        document.addEventListener('click', function() {
+            if (audio.paused && musicOn) {
+                audio.play().catch(function(e) {
+                    console.log('Автозапуск заблокирован:', e);
+                });
+            }
+        }, { once: true });
+
+        setTimeout(function() {
+            audio.play().catch(function(e) {
+                console.log('Первая попытка запуска:', e);
+            });
+        }, 1000);
+    </script>
+</body>
+</html>
